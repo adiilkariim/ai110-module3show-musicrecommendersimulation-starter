@@ -1,6 +1,6 @@
 import csv
 from typing import List, Dict, Tuple, Optional
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 
 @dataclass
 class Song:
@@ -18,6 +18,11 @@ class Song:
     valence: float
     danceability: float
     acousticness: float
+    popularity: int = 50
+    release_decade: str = ""
+    mood_tags: List[str] = field(default_factory=list)
+    explicit: bool = False
+    language: str = ""
 
 @dataclass
 class UserProfile:
@@ -29,6 +34,11 @@ class UserProfile:
     favorite_mood: str
     target_energy: float
     likes_acoustic: bool
+    target_popularity: Optional[int] = None
+    favorite_decade: Optional[str] = None
+    favorite_mood_tags: List[str] = field(default_factory=list)
+    allow_explicit: bool = True
+    language: Optional[str] = None
 
 class Recommender:
     """
@@ -50,12 +60,21 @@ class Recommender:
 
 def _profile_to_prefs(user: UserProfile) -> Dict:
     """Convert a UserProfile into the user_prefs dict format used by score_song."""
-    return {
+    prefs = {
         "genre": user.favorite_genre,
         "mood": user.favorite_mood,
         "energy": user.target_energy,
         "likes_acoustic": user.likes_acoustic,
+        "mood_tags": user.favorite_mood_tags,
+        "allow_explicit": user.allow_explicit,
     }
+    if user.target_popularity is not None:
+        prefs["popularity"] = user.target_popularity
+    if user.favorite_decade is not None:
+        prefs["decade"] = user.favorite_decade
+    if user.language is not None:
+        prefs["language"] = user.language
+    return prefs
 
 def load_songs(csv_path: str) -> List[Dict]:
     """Load songs from a CSV file into a list of dicts with numeric fields converted."""
@@ -65,6 +84,9 @@ def load_songs(csv_path: str) -> List[Dict]:
             row["id"] = int(row["id"])
             for key in ["energy", "tempo_bpm", "valence", "danceability", "acousticness"]:
                 row[key] = float(row[key])
+            row["popularity"] = int(row["popularity"])
+            row["mood_tags"] = row["mood_tags"].split(";") if row["mood_tags"] else []
+            row["explicit"] = row["explicit"] == "1"
             songs.append(row)
     return songs
 
@@ -90,6 +112,29 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
         if user_prefs["likes_acoustic"] == is_acoustic:
             score += 0.5
             reasons.append("acoustic preference match (+0.5)")
+
+    if "popularity" in user_prefs:
+        popularity_points = 0.5 * (1 - abs(song["popularity"] - user_prefs["popularity"]) / 100)
+        score += popularity_points
+        reasons.append(f"popularity closeness (+{popularity_points:.2f})")
+
+    if "decade" in user_prefs and song["release_decade"] == user_prefs["decade"]:
+        score += 0.5
+        reasons.append(f"{song['release_decade']} decade match (+0.5)")
+
+    shared_tags = [tag for tag in song["mood_tags"] if tag in user_prefs.get("mood_tags", [])]
+    if shared_tags:
+        tag_points = 0.3 * len(shared_tags)
+        score += tag_points
+        reasons.append(f"mood tags {'/'.join(shared_tags)} (+{tag_points:.1f})")
+
+    if not user_prefs.get("allow_explicit", True) and song["explicit"]:
+        score -= 1.0
+        reasons.append("explicit content penalty (-1.0)")
+
+    if "language" in user_prefs and song["language"] == user_prefs["language"]:
+        score += 0.5
+        reasons.append(f"{song['language']} language match (+0.5)")
 
     return score, reasons
 

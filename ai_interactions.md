@@ -10,19 +10,40 @@
 
 **What task did you give the agent?**
 
-<!-- Describe the goal you asked the agent to accomplish -->
+Add five new song attributes to the dataset and make the scoring logic use them, so recommendations can reflect more than genre, mood, and energy.
 
 **Prompts used:**
 
-<!-- Paste the key prompts you gave the agent -->
+> Add 5 new attributes to songs.csv for all 20 songs and update score_song to use them.
 
 **What did the agent generate or change?**
 
-<!-- List the files edited, code generated, or commands run -->
+- `data/songs.csv`: added 5 columns with values for all 20 songs:
+  - `popularity` (0–100)
+  - `release_decade` (e.g. `1980s`, `2020s`)
+  - `mood_tags` (detailed tags separated by `;`, e.g. `nostalgic;dreamy`)
+  - `explicit` (`1` = explicit lyrics, `0` = clean)
+  - `language` (`english`, `korean`, `spanish`, or `instrumental`)
+- `src/recommender.py`:
+  - `load_songs` converts `popularity` to int, splits `mood_tags` into a list, and turns `explicit` into True/False.
+  - `Song` and `UserProfile` got the new fields with default values, so the existing tests still work.
+  - `score_song` got five new rules, each added to the reasons list:
+
+    | Rule | Points |
+    |---|---|
+    | Popularity closeness | +0.5 × (1 − \|song − target\| / 100), from 0 to 0.5 |
+    | Release decade matches | +0.5 |
+    | Each shared mood tag | +0.3 per tag |
+    | Explicit song when user wants clean | −1.0 |
+    | Language matches | +0.5 |
+
+  - Each new rule only applies if the user profile includes that preference.
+- `src/main.py`: all four profiles were given popularity, decade, mood tag, and language preferences. The High-Energy Pop profile also sets `allow_explicit: False`.
+- Ran `pytest` (2 passed) and `python -m src.main` to confirm everything works.
 
 **What did you verify or fix manually?**
 
-<!-- Describe anything the agent got wrong or that required human review -->
+<!-- Write your own notes: e.g. checked that the CSV loads 20 songs, hand-calculated one score, checked a new rule actually changed a ranking -->
 
 ---
 

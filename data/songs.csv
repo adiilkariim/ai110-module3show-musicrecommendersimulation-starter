@@ -1,21 +1,21 @@
-id,title,artist,genre,mood,energy,tempo_bpm,valence,danceability,acousticness
-1,Sunrise City,Neon Echo,pop,happy,0.82,118,0.84,0.79,0.18
-2,Midnight Coding,LoRoom,lofi,chill,0.42,78,0.56,0.62,0.71
-3,Storm Runner,Voltline,rock,intense,0.91,152,0.48,0.66,0.10
-4,Library Rain,Paper Lanterns,lofi,chill,0.35,72,0.60,0.58,0.86
-5,Gym Hero,Max Pulse,pop,intense,0.93,132,0.77,0.88,0.05
-6,Spacewalk Thoughts,Orbit Bloom,ambient,chill,0.28,60,0.65,0.41,0.92
-7,Coffee Shop Stories,Slow Stereo,jazz,relaxed,0.37,90,0.71,0.54,0.89
-8,Night Drive Loop,Neon Echo,synthwave,moody,0.75,110,0.49,0.73,0.22
-9,Focus Flow,LoRoom,lofi,focused,0.40,80,0.59,0.60,0.78
-10,Rooftop Lights,Indigo Parade,indie pop,happy,0.76,124,0.81,0.82,0.35
-11,Concrete Crown,MC Verse,hip-hop,confident,0.78,95,0.62,0.89,0.12
-12,Iron Tempest,Blackforge,metal,angry,0.97,168,0.28,0.45,0.03
-13,Moonlit Sonata No. 2,Clara Vell,classical,peaceful,0.18,66,0.42,0.22,0.97
-14,Dusty Highway Home,June Carter Ridge,country,nostalgic,0.55,102,0.68,0.61,0.64
-15,Pulse Reactor,DJ Nova Grid,edm,euphoric,0.95,128,0.83,0.92,0.04
-16,Velvet Midnight,Saya Bloom,r&b,romantic,0.52,88,0.66,0.74,0.38
-17,Empty Platform,Grey Harbor,indie,sad,0.33,76,0.18,0.40,0.70
-18,Island Breeze Sunday,Coral Kings,reggae,relaxed,0.58,82,0.80,0.77,0.45
-19,Smoke and Strings,Delta Ray,blues,melancholy,0.44,70,0.30,0.48,0.80
-20,Neon Overdrive,Voltline,rock,energetic,0.88,145,0.71,0.63,0.08
+id,title,artist,genre,mood,energy,tempo_bpm,valence,danceability,acousticness,popularity,release_decade,mood_tags,explicit,language
+1,Sunrise City,Neon Echo,pop,happy,0.82,118,0.84,0.79,0.18,82,2020s,uplifting;sunny,0,english
+2,Midnight Coding,LoRoom,lofi,chill,0.42,78,0.56,0.62,0.71,58,2020s,cozy;focused,0,instrumental
+3,Storm Runner,Voltline,rock,intense,0.91,152,0.48,0.66,0.10,67,2000s,aggressive;driving,0,english
+4,Library Rain,Paper Lanterns,lofi,chill,0.35,72,0.60,0.58,0.86,49,2010s,cozy;rainy,0,instrumental
+5,Gym Hero,Max Pulse,pop,intense,0.93,132,0.77,0.88,0.05,88,2020s,motivational;aggressive,1,english
+6,Spacewalk Thoughts,Orbit Bloom,ambient,chill,0.28,60,0.65,0.41,0.92,35,2010s,dreamy;spacey,0,instrumental
+7,Coffee Shop Stories,Slow Stereo,jazz,relaxed,0.37,90,0.71,0.54,0.89,42,1990s,cozy;warm,0,english
+8,Night Drive Loop,Neon Echo,synthwave,moody,0.75,110,0.49,0.73,0.22,61,1980s,nostalgic;dreamy,0,instrumental
+9,Focus Flow,LoRoom,lofi,focused,0.40,80,0.59,0.60,0.78,54,2020s,focused;calm,0,instrumental
+10,Rooftop Lights,Indigo Parade,indie pop,happy,0.76,124,0.81,0.82,0.35,71,2010s,uplifting;nostalgic,0,korean
+11,Concrete Crown,MC Verse,hip-hop,confident,0.78,95,0.62,0.89,0.12,79,2020s,motivational;boastful,1,english
+12,Iron Tempest,Blackforge,metal,angry,0.97,168,0.28,0.45,0.03,45,2000s,aggressive;dark,1,english
+13,Moonlit Sonata No. 2,Clara Vell,classical,peaceful,0.18,66,0.42,0.22,0.97,30,2000s,calm;elegant,0,instrumental
+14,Dusty Highway Home,June Carter Ridge,country,nostalgic,0.55,102,0.68,0.61,0.64,56,1990s,nostalgic;warm,0,english
+15,Pulse Reactor,DJ Nova Grid,edm,euphoric,0.95,128,0.83,0.92,0.04,84,2010s,euphoric;party,0,instrumental
+16,Velvet Midnight,Saya Bloom,r&b,romantic,0.52,88,0.66,0.74,0.38,69,2000s,romantic;smooth,0,spanish
+17,Empty Platform,Grey Harbor,indie,sad,0.33,76,0.18,0.40,0.70,38,2010s,lonely;rainy,0,english
+18,Island Breeze Sunday,Coral Kings,reggae,relaxed,0.58,82,0.80,0.77,0.45,52,1970s,sunny;warm,0,english
+19,Smoke and Strings,Delta Ray,blues,melancholy,0.44,70,0.30,0.48,0.80,33,1960s,lonely;soulful,0,english
+20,Neon Overdrive,Voltline,rock,energetic,0.88,145,0.71,0.63,0.08,74,2020s,driving;euphoric,1,english

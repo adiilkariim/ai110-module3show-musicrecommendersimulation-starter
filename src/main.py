@@ -8,11 +8,27 @@ from src.recommender import load_songs, recommend_songs
 
 
 PROFILES = {
-    "High-Energy Pop": {"genre": "pop", "mood": "happy", "energy": 0.8},
-    "Chill Lofi": {"genre": "lofi", "mood": "chill", "energy": 0.4, "likes_acoustic": True},
-    "Deep Intense Rock": {"genre": "rock", "mood": "intense", "energy": 0.9, "likes_acoustic": False},
+    "High-Energy Pop": {
+        "genre": "pop", "mood": "happy", "energy": 0.8,
+        "popularity": 80, "decade": "2020s", "mood_tags": ["uplifting", "sunny"],
+        "allow_explicit": False, "language": "english",
+    },
+    "Chill Lofi": {
+        "genre": "lofi", "mood": "chill", "energy": 0.4, "likes_acoustic": True,
+        "popularity": 50, "decade": "2020s", "mood_tags": ["cozy", "focused"],
+        "language": "instrumental",
+    },
+    "Deep Intense Rock": {
+        "genre": "rock", "mood": "intense", "energy": 0.9, "likes_acoustic": False,
+        "popularity": 70, "decade": "2000s", "mood_tags": ["aggressive", "driving"],
+        "language": "english",
+    },
     # Edge case: conflicting preferences (sad mood but very high energy)
-    "Sad but Energetic": {"genre": "indie", "mood": "sad", "energy": 0.9},
+    "Sad but Energetic": {
+        "genre": "indie", "mood": "sad", "energy": 0.9,
+        "popularity": 40, "decade": "2010s", "mood_tags": ["lonely"],
+        "language": "english",
+    },
 }
 
 

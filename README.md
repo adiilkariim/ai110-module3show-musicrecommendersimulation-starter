@@ -31,9 +31,9 @@ These systems work in three stages:
 
 My simulation is **content-based only**. It has no listening history, so instead of learning preferences from behavior, the user states them directly in a taste profile. It prioritizes **genre first, then mood, then energy**.
 
-**`Song` features:** `id`, `title`, `artist`, `genre`, `mood`, `energy`, `tempo_bpm`, `valence`, `danceability`, `acousticness` (the scoring currently uses genre, mood, energy, and acousticness).
+**`Song` features:** `id`, `title`, `artist`, `genre`, `mood`, `energy`, `tempo_bpm`, `valence`, `danceability`, `acousticness`, `popularity` (0–100), `release_decade`, `mood_tags`, `explicit`, `language`. The scoring uses genre, mood, energy, acousticness, and the five newer attributes (popularity through language).
 
-**`UserProfile` features:** `favorite_genre`, `favorite_mood`, `target_energy` (0.0–1.0), `likes_acoustic` (true/false).
+**`UserProfile` features:** `favorite_genre`, `favorite_mood`, `target_energy` (0.0–1.0), `likes_acoustic` (true/false), plus optional `target_popularity`, `favorite_decade`, `favorite_mood_tags`, `allow_explicit`, and `language`.
 
 ### Algorithm Recipe
 
@@ -45,8 +45,13 @@ My simulation is **content-based only**. It has no listening history, so instead
 | Song mood matches favorite mood | +1.0 |
 | Energy closeness | +(1 − \|song energy − target energy\|), from 0 to 1 |
 | Acoustic preference matches (acousticness ≥ 0.5 counts as acoustic) | +0.5 |
+| Popularity closeness | +0.5 × (1 − \|song − target\| / 100), from 0 to 0.5 |
+| Release decade matches | +0.5 |
+| Each shared mood tag | +0.3 per tag |
+| Explicit song when the user wants clean songs | −1.0 |
+| Language matches | +0.5 |
 
-Energy rewards songs **close to** the user's target, not just higher or lower energy. Every reason that adds points is recorded so each recommendation can be explained. Maximum score: 4.5.
+Energy and popularity reward songs **close to** the user's target, not just higher or lower values. The newer rules only apply if the profile includes that preference. Every rule that changes the score is recorded as a reason, so each recommendation can be explained.
 
 **Ranking rule (the whole catalog):** score every song in `data/songs.csv`, sort from highest to lowest score, and return the top *k* (default 5).
 
@@ -106,21 +111,21 @@ Output of `python -m src.main` for the default **High-Energy Pop** profile. Each
 Loaded songs: 20
 
 === High-Energy Pop ===
-Profile: {'genre': 'pop', 'mood': 'happy', 'energy': 0.8}
+Profile: {'genre': 'pop', 'mood': 'happy', 'energy': 0.8, 'popularity': 80, 'decade': '2020s', 'mood_tags': ['uplifting', 'sunny'], 'allow_explicit': False, 'language': 'english'}
 
-1. Sunrise City - Score: 3.98
-   Because: genre match (+2.0), mood match (+1.0), energy closeness (+0.98)
-2. Gym Hero - Score: 2.87
-   Because: genre match (+2.0), energy closeness (+0.87)
-3. Rooftop Lights - Score: 1.96
-   Because: mood match (+1.0), energy closeness (+0.96)
-4. Concrete Crown - Score: 0.98
-   Because: energy closeness (+0.98)
-5. Night Drive Loop - Score: 0.95
-   Because: energy closeness (+0.95)
+1. Sunrise City - Score: 6.07
+   Because: genre match (+2.0), mood match (+1.0), energy closeness (+0.98), popularity closeness (+0.49), 2020s decade match (+0.5), mood tags uplifting/sunny (+0.6), english language match (+0.5)
+2. Gym Hero - Score: 3.33
+   Because: genre match (+2.0), energy closeness (+0.87), popularity closeness (+0.46), 2020s decade match (+0.5), explicit content penalty (-1.0), english language match (+0.5)
+3. Rooftop Lights - Score: 2.71
+   Because: mood match (+1.0), energy closeness (+0.96), popularity closeness (+0.46), mood tags uplifting (+0.3)
+4. Island Breeze Sunday - Score: 1.94
+   Because: energy closeness (+0.78), popularity closeness (+0.36), mood tags sunny (+0.3), english language match (+0.5)
+5. Storm Runner - Score: 1.82
+   Because: energy closeness (+0.89), popularity closeness (+0.43), english language match (+0.5)
 ```
 
-These results match what I expected for a happy pop listener. "Sunrise City" is a near-perfect match (pop, happy, energy 0.82 vs. target 0.8). "Gym Hero" ranks second only because of the genre match, even though its mood is intense, not happy. "Rooftop Lights" is happy and close in energy, but gets no genre points because its genre is "indie pop", which does not exactly match "pop".
+These results match what I expected for a happy pop listener. "Sunrise City" matches almost every preference (pop, happy, energy 0.82 vs. target 0.8, 2020s, uplifting and sunny). "Gym Hero" still ranks second mainly because of the genre match, even though its mood is intense and it loses a point for explicit lyrics. "Rooftop Lights" is happy and close in energy, but gets no genre points because its genre is "indie pop", which does not exactly match "pop", and no language points because it is in Korean.
 
 **Screenshot or video** *(optional)*: <!-- Insert a screenshot or demo video link here -->
 
@@ -130,7 +135,7 @@ These results match what I expected for a happy pop listener. "Sunrise City" is 
 
 ### Experiment 1: Weight Shift (genre halved, energy doubled)
 
-I changed genre from **+2.0 to +1.0** and doubled energy closeness (now worth **0 to 2** points), kept mood (+1.0) and acoustic (+0.5) the same, and re-ran all four profiles. The experiment ran in a separate script, so the main code still uses the original weights.
+I changed genre from **+2.0 to +1.0** and doubled energy closeness (now worth **0 to 2** points), kept mood (+1.0) and acoustic (+0.5) the same, and re-ran all four profiles. The experiment ran in a separate script, so the main code still uses the original weights. *(This experiment was run before the five extra attributes were added, so the scores below only include genre, mood, energy, and acoustic points.)*
 
 **High-Energy Pop** (the only profile whose order changed):
 
