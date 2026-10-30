@@ -17,17 +17,49 @@ Replace this paragraph with your own summary of what your version does.
 
 ## How The System Works
 
-Explain your design in plain language.
+### How real-world recommenders work
 
-Some prompts to answer:
+Platforms like Spotify and YouTube usually combine two approaches. **Collaborative filtering** looks at people's behavior: if listeners with similar histories enjoy a track, or often put two tracks in the same playlist, the system recommends it to you. **Content-based filtering** compares a track's own features (genre, tempo, energy, mood, danceability) to music you already enjoy, which helps surface songs that few people have listened to yet.
 
-- What features does each `Song` use in your system
-  - For example: genre, mood, energy, tempo
-- What information does your `UserProfile` store
-- How does your `Recommender` compute a score for each song
-- How do you choose which songs to recommend
+These systems work in three stages:
 
-You can include a simple diagram or bullet list if helpful.
+1. **Input data** – raw actions and track details, such as a play, a skip, a save, or a song's tempo.
+2. **User preferences** – the system's estimate of what you like, inferred from those inputs (for example, repeated saves are stronger evidence than a single skip).
+3. **Ranking** – every candidate track gets a score, and the tracks predicted to fit your taste best are placed at the top.
+
+### What my version does
+
+My simulation is **content-based only**. It has no listening history, so instead of learning preferences from behavior, the user states them directly in a taste profile. It prioritizes **genre first, then mood, then energy**.
+
+**`Song` features:** `id`, `title`, `artist`, `genre`, `mood`, `energy`, `tempo_bpm`, `valence`, `danceability`, `acousticness` (the scoring currently uses genre, mood, energy, and acousticness).
+
+**`UserProfile` features:** `favorite_genre`, `favorite_mood`, `target_energy` (0.0–1.0), `likes_acoustic` (true/false).
+
+### Algorithm Recipe
+
+**Scoring rule (one song):**
+
+| Rule | Points |
+|---|---|
+| Song genre matches favorite genre | +2.0 |
+| Song mood matches favorite mood | +1.0 |
+| Energy closeness | +(1 − \|song energy − target energy\|), from 0 to 1 |
+| Acoustic preference matches (acousticness ≥ 0.5 counts as acoustic) | +0.5 |
+
+Energy rewards songs **close to** the user's target, not just higher or lower energy. Every reason that adds points is recorded so each recommendation can be explained. Maximum score: 4.5.
+
+**Ranking rule (the whole catalog):** score every song in `data/songs.csv`, sort from highest to lowest score, and return the top *k* (default 5).
+
+```
+User profile ──► score_song() runs on every song ──► sort by score ──► top k recommendations + reasons
+```
+
+### Biases I expect
+
+- **Genre can outweigh mood.** A genre match (+2.0) is worth twice a mood match, so a pop song with the wrong mood can beat a song with the right mood in a different genre.
+- **Exact text matching.** "indie pop" gets no credit for a "pop" fan, even though they are very close.
+- **Subjective labels treated as facts.** Labels like "sad" or values like danceability are approximations, but the system treats them as exact.
+- **Small catalog.** With only 20 songs, most genres have just one or two tracks, so some users will quickly run out of good matches.
 
 ---
 
@@ -96,11 +128,36 @@ These results match what I expected for a happy pop listener. "Sunrise City" is 
 
 ## Experiments You Tried
 
-Use this section to document the experiments you ran. For example:
+### Experiment 1: Weight Shift (genre halved, energy doubled)
 
-- What happened when you changed the weight on genre from 2.0 to 0.5
-- What happened when you added tempo or valence to the score
-- How did your system behave for different types of users
+I changed genre from **+2.0 to +1.0** and doubled energy closeness (now worth **0 to 2** points), kept mood (+1.0) and acoustic (+0.5) the same, and re-ran all four profiles. The experiment ran in a separate script, so the main code still uses the original weights.
+
+**High-Energy Pop** (the only profile whose order changed):
+
+```
+#  BASELINE                  EXPERIMENT (genre 1.0, energy x2)
+1  Sunrise City (3.98)       Sunrise City (3.96)
+2  Gym Hero (2.87)           Rooftop Lights (2.92)
+3  Rooftop Lights (1.96)     Gym Hero (2.74)
+4  Concrete Crown (0.98)     Concrete Crown (1.96)
+5  Night Drive Loop (0.95)   Night Drive Loop (1.90)
+```
+
+**Other profiles** kept the same order, but the gaps between songs shrank:
+
+```
+Chill Lofi:         Spacewalk Thoughts (ambient)  2.38 -> 3.26  (closer to the lofi songs)
+Deep Intense Rock:  Gym Hero (pop) 3.44 vs. Neon Overdrive (rock) 3.46  (only 0.02 apart)
+Sad but Energetic:  Empty Platform's lead 3.43 vs 0.99 -> 2.86 vs 1.98  (much smaller)
+```
+
+**What I learned:**
+
+- **More accurate for pop.** "Rooftop Lights" (happy, energy 0.76) now beats "Gym Hero" (intense), which fits a "happy pop" listener better. It fixes the Gym Hero problem.
+- **Genre stops dominating.** Songs from other genres move much closer to the top, which adds variety but makes the system less loyal to the user's favorite genre.
+- **Worse for conflicting preferences.** For "Sad but Energetic," loud songs now get almost 2 points just for energy, so mood matters even less after the first result.
+
+Overall, the change made the results **more accurate for some users and just different (or worse) for others**, so I kept the original weights.
 
 ---
 
