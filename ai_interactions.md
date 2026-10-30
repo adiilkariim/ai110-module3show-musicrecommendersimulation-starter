@@ -41,3 +41,22 @@
 **How does the pattern appear in your final code?**
 
 <!-- Point to the relevant class or method -->
+
+---
+
+## Design Discussion: Subjective Features
+
+**Prompt:**
+
+> But what are the measurement units? It seems difficult to recommend a song using features like danceability, since they can be subjective. A user might want to dance to a sad song—or to rap, metal, or happy music. How does the app recommend the right song when people's preferences are subjective? Is there a formula it uses?
+
+**AI answer (summary):**
+
+- **No units.** Energy, danceability, valence, and acousticness are scores from 0.0 to 1.0, not physical measurements. Real platforms estimate them by analyzing audio (beat strength, loudness, rhythm) or from human labels. In this dataset the values are simulated.
+- **No "right" song (no ground truth).** The recommender does not understand music. It only finds songs whose labels and numbers are closest to what the user described. If a label doesn't match how the user feels, the recommendation will be off.
+- **Mixing features is possible.** Because the score adds points from each feature independently, a "sad + danceable" song can still rank highest for a user who wants both. Nothing forces sad and danceable to be opposites. (Danceability is not in the scoring yet.)
+- **How real apps handle subjectivity.** They rely heavily on behavior: skips, replays, playlist adds, and what similar users liked (collaborative filtering). This learns each user's personal idea of "danceable" instead of trusting one fixed score.
+
+**What I took from it:**
+
+Treating subjective labels like "sad" or "danceability" as facts is a limitation of my content-based recommender, and I will document it in the Limitations and Bias section of the model card.
