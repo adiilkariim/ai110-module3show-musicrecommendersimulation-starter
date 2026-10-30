@@ -43,7 +43,7 @@ Add five new song attributes to the dataset and make the scoring logic use them,
 
 **What did you verify or fix manually?**
 
-<!-- Write your own notes: e.g. checked that the CSV loads 20 songs, hand-calculated one score, checked a new rule actually changed a ranking -->
+I opened songs.csv and checked that all 20 songs had values for the 5 new columns. I ran the app and added up Sunrise City's points by hand, and they matched the 6.07 score. I also checked that Gym Hero lost 1 point in the pop profile because it is marked explicit, which shows the new rule works.
 
 ---
 

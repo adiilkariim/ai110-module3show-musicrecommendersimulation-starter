@@ -9,6 +9,9 @@ from src.recommender import load_songs, recommend_songs, STRATEGIES
 # Ranking mode: "genre_first", "mood_first", or "energy_focused"
 MODE = "genre_first"
 
+# Diversity penalty: lowers the score of songs whose artist or genre is already in the top results
+DIVERSITY = False
+
 PROFILES = {
     "High-Energy Pop": {
         "genre": "pop", "mood": "happy", "energy": 0.8,
@@ -39,9 +42,10 @@ def main() -> None:
     strategy = STRATEGIES[MODE]
     print(f"Loaded songs: {len(songs)}")
     print(f"Ranking mode: {strategy.name}")
+    print(f"Diversity penalty: {'on' if DIVERSITY else 'off'}")
 
     for name, user_prefs in PROFILES.items():
-        recommendations = recommend_songs(user_prefs, songs, k=5, strategy=strategy)
+        recommendations = recommend_songs(user_prefs, songs, k=5, strategy=strategy, diversity=DIVERSITY)
 
         print(f"\n=== {name} ===")
         print(f"Profile: {user_prefs}\n")

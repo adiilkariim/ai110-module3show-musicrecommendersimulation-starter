@@ -32,6 +32,29 @@ Think of it as a points game. Every song starts at zero, and earns points for ea
 
 After every song has a score, the system sorts them from highest to lowest and shows the top 5, along with the list of reasons that earned each song its points.
 
+### Diversity penalty (fairness)
+
+With the diversity penalty turned on (`DIVERSITY = True` in `main.py`), the system builds the top 5 one song at a time. Before each pick, any song whose **artist** is already in the list loses 1.5 points, and any song whose **genre** is already in the list loses 0.5 points. The penalty shows up in the reasons (e.g. "repeat artist penalty (-1.5)").
+
+**Why it improves fairness:** without it, one artist or genre can take over the whole list, and other artists never get a chance to be seen. That is the start of a "filter bubble". The penalty gives more artists and genres a spot, while still letting a really strong match stay on top.
+
+What changed when I turned it on:
+
+```
+Chill Lofi         off: Midnight Coding, Library Rain, Focus Flow, Spacewalk Thoughts, Coffee Shop Stories
+                   on:  Midnight Coding, Library Rain, Spacewalk Thoughts, Focus Flow, Coffee Shop Stories
+Deep Intense Rock  off: Storm Runner, Neon Overdrive, Gym Hero, Iron Tempest, Sunrise City
+                   on:  Storm Runner, Gym Hero, Iron Tempest, Neon Overdrive, Concrete Crown
+Sad but Energetic  off: Empty Platform, Iron Tempest, Storm Runner, Neon Overdrive, Smoke and Strings
+                   on:  Empty Platform, Iron Tempest, Storm Runner, Smoke and Strings, Gym Hero
+```
+
+- **Chill Lofi:** "Focus Flow" is by LoRoom, the same artist as #1, so it drops below the ambient song "Spacewalk Thoughts".
+- **Deep Intense Rock:** "Neon Overdrive" is by Voltline, the same artist as #1, so it drops from #2 to #4, and the hip-hop song "Concrete Crown" gets a spot.
+- **Sad but Energetic:** "Neon Overdrive" drops out completely because Voltline is already in the list, and "Smoke and Strings" (lonely blues, closer to the sad mood) moves up.
+
+**Trade-off:** a rock fan might actually want two rock songs at the top, so the penalty can push away songs a user would like. That's why it is a switch and not always on.
+
 **Changes from the starter logic:** the starter only had empty placeholders. I implemented the scoring and ranking, added the acoustic rule using the `likes_acoustic` field, and added five new song attributes (popularity, release decade, mood tags, explicit, language) with their own rules.
 
 ---
@@ -162,7 +185,7 @@ In plain language: Gym Hero is a loud, intense workout song, but it is labeled "
 ## 8. Future Work  
 
 - **Partial genre and mood matches:** give some credit for related labels (e.g. "indie pop" for a "pop" fan, "melancholy" for "sad").
-- **Diversity in the top 5:** penalize songs from an artist or genre already in the list, so users don't get the same artist twice or only loud filler songs.
+- **Smarter diversity:** the current penalty only looks at artist and genre. It could also spread out energy levels, so users don't get only loud filler songs.
 - **Balance the weights:** lower the genre weight or scale it by how many songs exist in that genre, so small genres don't run out of matches so fast.
 - **Use behavior data:** add simulated likes and skips so the system can learn a user's taste instead of relying only on labels.
 

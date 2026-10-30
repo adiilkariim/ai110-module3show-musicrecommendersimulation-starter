@@ -176,10 +176,39 @@ def score_song(user_prefs: Dict, song: Dict, strategy: Optional[RankingStrategy]
 
     return score, reasons
 
-def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5, strategy: Optional[RankingStrategy] = None) -> List[Tuple[Dict, float, str]]:
+ARTIST_PENALTY = 1.5
+GENRE_PENALTY = 0.5
+
+def recommend_songs(
+    user_prefs: Dict,
+    songs: List[Dict],
+    k: int = 5,
+    strategy: Optional[RankingStrategy] = None,
+    diversity: bool = False,
+) -> List[Tuple[Dict, float, str]]:
     """Score every song, sort by score descending, and return the top k as (song, score, explanation)."""
-    scored = []
-    for song in songs:
-        score, reasons = score_song(user_prefs, song, strategy)
-        scored.append((song, score, ", ".join(reasons)))
-    return sorted(scored, key=lambda item: item[1], reverse=True)[:k]
+    scored = [(song, *score_song(user_prefs, song, strategy)) for song in songs]
+
+    if not diversity:
+        ranked = sorted(scored, key=lambda item: item[1], reverse=True)[:k]
+        return [(song, score, ", ".join(reasons)) for song, score, reasons in ranked]
+
+    # Diversity mode: pick songs one at a time, penalizing artists and genres already picked.
+    picked = []
+    remaining = scored
+    while remaining and len(picked) < k:
+        best = None
+        for song, score, reasons in remaining:
+            adjusted, extra = score, []
+            if any(p[0]["artist"] == song["artist"] for p in picked):
+                adjusted -= ARTIST_PENALTY
+                extra.append(f"repeat artist penalty (-{ARTIST_PENALTY})")
+            if any(p[0]["genre"] == song["genre"] for p in picked):
+                adjusted -= GENRE_PENALTY
+                extra.append(f"repeat genre penalty (-{GENRE_PENALTY})")
+            if best is None or adjusted > best[1]:
+                best = (song, adjusted, reasons + extra)
+        picked.append(best)
+        remaining = [item for item in remaining if item[0] is not best[0]]
+
+    return [(song, score, ", ".join(reasons)) for song, score, reasons in picked]
