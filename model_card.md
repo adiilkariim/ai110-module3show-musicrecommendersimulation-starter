@@ -102,64 +102,161 @@ I tested four profiles (three normal and one edge case with conflicting preferen
 === High-Energy Pop ===
 Profile: {'genre': 'pop', 'mood': 'happy', 'energy': 0.8, 'popularity': 80, 'decade': '2020s', 'mood_tags': ['uplifting', 'sunny'], 'allow_explicit': False, 'language': 'english'}
 
-1. Sunrise City - Score: 6.07
-   Because: genre match (+2.0), mood match (+1.0), energy closeness (+0.98), popularity closeness (+0.49), 2020s decade match (+0.5), mood tags uplifting/sunny (+0.6), english language match (+0.5)
-2. Gym Hero - Score: 3.33
-   Because: genre match (+2.0), energy closeness (+0.87), popularity closeness (+0.46), 2020s decade match (+0.5), explicit content penalty (-1.0), english language match (+0.5)
-3. Rooftop Lights - Score: 2.71
-   Because: mood match (+1.0), energy closeness (+0.96), popularity closeness (+0.46), mood tags uplifting (+0.3)
-4. Island Breeze Sunday - Score: 1.94
-   Because: energy closeness (+0.78), popularity closeness (+0.36), mood tags sunny (+0.3), english language match (+0.5)
-5. Storm Runner - Score: 1.82
-   Because: energy closeness (+0.89), popularity closeness (+0.43), english language match (+0.5)
++-----+----------------------+---------------+-----------+---------+----------------------------------+
+|   # | Title                | Artist        | Genre     |   Score | Reasons                          |
++=====+======================+===============+===========+=========+==================================+
+|   1 | Sunrise City         | Neon Echo     | pop       |    6.07 | genre match (+2.0)               |
+|     |                      |               |           |         | mood match (+1.0)                |
+|     |                      |               |           |         | energy closeness (+0.98)         |
+|     |                      |               |           |         | popularity closeness (+0.49)     |
+|     |                      |               |           |         | 2020s decade match (+0.5)        |
+|     |                      |               |           |         | mood tags uplifting/sunny (+0.6) |
+|     |                      |               |           |         | english language match (+0.5)    |
++-----+----------------------+---------------+-----------+---------+----------------------------------+
+|   2 | Gym Hero             | Max Pulse     | pop       |    3.33 | genre match (+2.0)               |
+|     |                      |               |           |         | energy closeness (+0.87)         |
+|     |                      |               |           |         | popularity closeness (+0.46)     |
+|     |                      |               |           |         | 2020s decade match (+0.5)        |
+|     |                      |               |           |         | explicit content penalty (-1.0)  |
+|     |                      |               |           |         | english language match (+0.5)    |
++-----+----------------------+---------------+-----------+---------+----------------------------------+
+|   3 | Rooftop Lights       | Indigo Parade | indie pop |    2.71 | mood match (+1.0)                |
+|     |                      |               |           |         | energy closeness (+0.96)         |
+|     |                      |               |           |         | popularity closeness (+0.46)     |
+|     |                      |               |           |         | mood tags uplifting (+0.3)       |
++-----+----------------------+---------------+-----------+---------+----------------------------------+
+|   4 | Island Breeze Sunday | Coral Kings   | reggae    |    1.94 | energy closeness (+0.78)         |
+|     |                      |               |           |         | popularity closeness (+0.36)     |
+|     |                      |               |           |         | mood tags sunny (+0.3)           |
+|     |                      |               |           |         | english language match (+0.5)    |
++-----+----------------------+---------------+-----------+---------+----------------------------------+
+|   5 | Storm Runner         | Voltline      | rock      |    1.82 | energy closeness (+0.89)         |
+|     |                      |               |           |         | popularity closeness (+0.43)     |
+|     |                      |               |           |         | english language match (+0.5)    |
++-----+----------------------+---------------+-----------+---------+----------------------------------+
 ```
 
 ```
 === Chill Lofi ===
 Profile: {'genre': 'lofi', 'mood': 'chill', 'energy': 0.4, 'likes_acoustic': True, 'popularity': 50, 'decade': '2020s', 'mood_tags': ['cozy', 'focused'], 'language': 'instrumental'}
 
-1. Midnight Coding - Score: 6.54
-   Because: genre match (+2.0), mood match (+1.0), energy closeness (+0.98), acoustic preference match (+0.5), popularity closeness (+0.46), 2020s decade match (+0.5), mood tags cozy/focused (+0.6), instrumental language match (+0.5)
-2. Library Rain - Score: 5.75
-   Because: genre match (+2.0), mood match (+1.0), energy closeness (+0.95), acoustic preference match (+0.5), popularity closeness (+0.49), mood tags cozy (+0.3), instrumental language match (+0.5)
-3. Focus Flow - Score: 5.28
-   Because: genre match (+2.0), energy closeness (+1.00), acoustic preference match (+0.5), popularity closeness (+0.48), 2020s decade match (+0.5), mood tags focused (+0.3), instrumental language match (+0.5)
-4. Spacewalk Thoughts - Score: 3.30
-   Because: mood match (+1.0), energy closeness (+0.88), acoustic preference match (+0.5), popularity closeness (+0.42), instrumental language match (+0.5)
-5. Coffee Shop Stories - Score: 2.23
-   Because: energy closeness (+0.97), acoustic preference match (+0.5), popularity closeness (+0.46), mood tags cozy (+0.3)
++-----+---------------------+----------------+---------+---------+------------------------------------+
+|   # | Title               | Artist         | Genre   |   Score | Reasons                            |
++=====+=====================+================+=========+=========+====================================+
+|   1 | Midnight Coding     | LoRoom         | lofi    |    6.54 | genre match (+2.0)                 |
+|     |                     |                |         |         | mood match (+1.0)                  |
+|     |                     |                |         |         | energy closeness (+0.98)           |
+|     |                     |                |         |         | acoustic preference match (+0.5)   |
+|     |                     |                |         |         | popularity closeness (+0.46)       |
+|     |                     |                |         |         | 2020s decade match (+0.5)          |
+|     |                     |                |         |         | mood tags cozy/focused (+0.6)      |
+|     |                     |                |         |         | instrumental language match (+0.5) |
++-----+---------------------+----------------+---------+---------+------------------------------------+
+|   2 | Library Rain        | Paper Lanterns | lofi    |    5.75 | genre match (+2.0)                 |
+|     |                     |                |         |         | mood match (+1.0)                  |
+|     |                     |                |         |         | energy closeness (+0.95)           |
+|     |                     |                |         |         | acoustic preference match (+0.5)   |
+|     |                     |                |         |         | popularity closeness (+0.49)       |
+|     |                     |                |         |         | mood tags cozy (+0.3)              |
+|     |                     |                |         |         | instrumental language match (+0.5) |
++-----+---------------------+----------------+---------+---------+------------------------------------+
+|   3 | Focus Flow          | LoRoom         | lofi    |    5.28 | genre match (+2.0)                 |
+|     |                     |                |         |         | energy closeness (+1.00)           |
+|     |                     |                |         |         | acoustic preference match (+0.5)   |
+|     |                     |                |         |         | popularity closeness (+0.48)       |
+|     |                     |                |         |         | 2020s decade match (+0.5)          |
+|     |                     |                |         |         | mood tags focused (+0.3)           |
+|     |                     |                |         |         | instrumental language match (+0.5) |
++-----+---------------------+----------------+---------+---------+------------------------------------+
+|   4 | Spacewalk Thoughts  | Orbit Bloom    | ambient |    3.30 | mood match (+1.0)                  |
+|     |                     |                |         |         | energy closeness (+0.88)           |
+|     |                     |                |         |         | acoustic preference match (+0.5)   |
+|     |                     |                |         |         | popularity closeness (+0.42)       |
+|     |                     |                |         |         | instrumental language match (+0.5) |
++-----+---------------------+----------------+---------+---------+------------------------------------+
+|   5 | Coffee Shop Stories | Slow Stereo    | jazz    |    2.23 | energy closeness (+0.97)           |
+|     |                     |                |         |         | acoustic preference match (+0.5)   |
+|     |                     |                |         |         | popularity closeness (+0.46)       |
+|     |                     |                |         |         | mood tags cozy (+0.3)              |
++-----+---------------------+----------------+---------+---------+------------------------------------+
 ```
 
 ```
 === Deep Intense Rock ===
 Profile: {'genre': 'rock', 'mood': 'intense', 'energy': 0.9, 'likes_acoustic': False, 'popularity': 70, 'decade': '2000s', 'mood_tags': ['aggressive', 'driving'], 'language': 'english'}
 
-1. Storm Runner - Score: 6.58
-   Because: genre match (+2.0), mood match (+1.0), energy closeness (+0.99), acoustic preference match (+0.5), popularity closeness (+0.48), 2000s decade match (+0.5), mood tags aggressive/driving (+0.6), english language match (+0.5)
-2. Neon Overdrive - Score: 4.76
-   Because: genre match (+2.0), energy closeness (+0.98), acoustic preference match (+0.5), popularity closeness (+0.48), mood tags driving (+0.3), english language match (+0.5)
-3. Gym Hero - Score: 3.68
-   Because: mood match (+1.0), energy closeness (+0.97), acoustic preference match (+0.5), popularity closeness (+0.41), mood tags aggressive (+0.3), english language match (+0.5)
-4. Iron Tempest - Score: 3.10
-   Because: energy closeness (+0.93), acoustic preference match (+0.5), popularity closeness (+0.38), 2000s decade match (+0.5), mood tags aggressive (+0.3), english language match (+0.5)
-5. Sunrise City - Score: 2.36
-   Because: energy closeness (+0.92), acoustic preference match (+0.5), popularity closeness (+0.44), english language match (+0.5)
++-----+----------------+------------+---------+---------+-------------------------------------+
+|   # | Title          | Artist     | Genre   |   Score | Reasons                             |
++=====+================+============+=========+=========+=====================================+
+|   1 | Storm Runner   | Voltline   | rock    |    6.58 | genre match (+2.0)                  |
+|     |                |            |         |         | mood match (+1.0)                   |
+|     |                |            |         |         | energy closeness (+0.99)            |
+|     |                |            |         |         | acoustic preference match (+0.5)    |
+|     |                |            |         |         | popularity closeness (+0.48)        |
+|     |                |            |         |         | 2000s decade match (+0.5)           |
+|     |                |            |         |         | mood tags aggressive/driving (+0.6) |
+|     |                |            |         |         | english language match (+0.5)       |
++-----+----------------+------------+---------+---------+-------------------------------------+
+|   2 | Neon Overdrive | Voltline   | rock    |    4.76 | genre match (+2.0)                  |
+|     |                |            |         |         | energy closeness (+0.98)            |
+|     |                |            |         |         | acoustic preference match (+0.5)    |
+|     |                |            |         |         | popularity closeness (+0.48)        |
+|     |                |            |         |         | mood tags driving (+0.3)            |
+|     |                |            |         |         | english language match (+0.5)       |
++-----+----------------+------------+---------+---------+-------------------------------------+
+|   3 | Gym Hero       | Max Pulse  | pop     |    3.68 | mood match (+1.0)                   |
+|     |                |            |         |         | energy closeness (+0.97)            |
+|     |                |            |         |         | acoustic preference match (+0.5)    |
+|     |                |            |         |         | popularity closeness (+0.41)        |
+|     |                |            |         |         | mood tags aggressive (+0.3)         |
+|     |                |            |         |         | english language match (+0.5)       |
++-----+----------------+------------+---------+---------+-------------------------------------+
+|   4 | Iron Tempest   | Blackforge | metal   |    3.10 | energy closeness (+0.93)            |
+|     |                |            |         |         | acoustic preference match (+0.5)    |
+|     |                |            |         |         | popularity closeness (+0.38)        |
+|     |                |            |         |         | 2000s decade match (+0.5)           |
+|     |                |            |         |         | mood tags aggressive (+0.3)         |
+|     |                |            |         |         | english language match (+0.5)       |
++-----+----------------+------------+---------+---------+-------------------------------------+
+|   5 | Sunrise City   | Neon Echo  | pop     |    2.36 | energy closeness (+0.92)            |
+|     |                |            |         |         | acoustic preference match (+0.5)    |
+|     |                |            |         |         | popularity closeness (+0.44)        |
+|     |                |            |         |         | english language match (+0.5)       |
++-----+----------------+------------+---------+---------+-------------------------------------+
 ```
 
 ```
 === Sad but Energetic ===
 Profile: {'genre': 'indie', 'mood': 'sad', 'energy': 0.9, 'popularity': 40, 'decade': '2010s', 'mood_tags': ['lonely'], 'language': 'english'}
 
-1. Empty Platform - Score: 5.22
-   Because: genre match (+2.0), mood match (+1.0), energy closeness (+0.43), popularity closeness (+0.49), 2010s decade match (+0.5), mood tags lonely (+0.3), english language match (+0.5)
-2. Iron Tempest - Score: 1.91
-   Because: energy closeness (+0.93), popularity closeness (+0.47), english language match (+0.5)
-3. Storm Runner - Score: 1.85
-   Because: energy closeness (+0.99), popularity closeness (+0.36), english language match (+0.5)
-4. Neon Overdrive - Score: 1.81
-   Because: energy closeness (+0.98), popularity closeness (+0.33), english language match (+0.5)
-5. Smoke and Strings - Score: 1.80
-   Because: energy closeness (+0.54), popularity closeness (+0.46), mood tags lonely (+0.3), english language match (+0.5)
++-----+-------------------+-------------+---------+---------+-------------------------------+
+|   # | Title             | Artist      | Genre   |   Score | Reasons                       |
++=====+===================+=============+=========+=========+===============================+
+|   1 | Empty Platform    | Grey Harbor | indie   |    5.22 | genre match (+2.0)            |
+|     |                   |             |         |         | mood match (+1.0)             |
+|     |                   |             |         |         | energy closeness (+0.43)      |
+|     |                   |             |         |         | popularity closeness (+0.49)  |
+|     |                   |             |         |         | 2010s decade match (+0.5)     |
+|     |                   |             |         |         | mood tags lonely (+0.3)       |
+|     |                   |             |         |         | english language match (+0.5) |
++-----+-------------------+-------------+---------+---------+-------------------------------+
+|   2 | Iron Tempest      | Blackforge  | metal   |    1.91 | energy closeness (+0.93)      |
+|     |                   |             |         |         | popularity closeness (+0.47)  |
+|     |                   |             |         |         | english language match (+0.5) |
++-----+-------------------+-------------+---------+---------+-------------------------------+
+|   3 | Storm Runner      | Voltline    | rock    |    1.85 | energy closeness (+0.99)      |
+|     |                   |             |         |         | popularity closeness (+0.36)  |
+|     |                   |             |         |         | english language match (+0.5) |
++-----+-------------------+-------------+---------+---------+-------------------------------+
+|   4 | Neon Overdrive    | Voltline    | rock    |    1.81 | energy closeness (+0.98)      |
+|     |                   |             |         |         | popularity closeness (+0.33)  |
+|     |                   |             |         |         | english language match (+0.5) |
++-----+-------------------+-------------+---------+---------+-------------------------------+
+|   5 | Smoke and Strings | Delta Ray   | blues   |    1.80 | energy closeness (+0.54)      |
+|     |                   |             |         |         | popularity closeness (+0.46)  |
+|     |                   |             |         |         | mood tags lonely (+0.3)       |
+|     |                   |             |         |         | english language match (+0.5) |
++-----+-------------------+-------------+---------+---------+-------------------------------+
 ```
 
 ### Comparing the profiles

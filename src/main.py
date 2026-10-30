@@ -4,6 +4,8 @@ Command line runner for the Music Recommender Simulation.
 Runs the recommender for several user profiles and prints the top results.
 """
 
+from tabulate import tabulate
+
 from src.recommender import load_songs, recommend_songs, STRATEGIES
 
 # Ranking mode: "genre_first", "mood_first", or "energy_focused"
@@ -49,9 +51,11 @@ def main() -> None:
 
         print(f"\n=== {name} ===")
         print(f"Profile: {user_prefs}\n")
-        for i, (song, score, explanation) in enumerate(recommendations, start=1):
-            print(f"{i}. {song['title']} - Score: {score:.2f}")
-            print(f"   Because: {explanation}")
+        rows = [
+            [i, song["title"], song["artist"], song["genre"], score, explanation.replace(", ", "\n")]
+            for i, (song, score, explanation) in enumerate(recommendations, start=1)
+        ]
+        print(tabulate(rows, headers=["#", "Title", "Artist", "Genre", "Score", "Reasons"], tablefmt="grid", floatfmt=".2f"))
 
 
 if __name__ == "__main__":
