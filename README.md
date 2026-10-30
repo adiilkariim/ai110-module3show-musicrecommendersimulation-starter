@@ -11,7 +11,7 @@ Your goal is to:
 - Evaluate what your system gets right and wrong
 - Reflect on how this mirrors real world AI recommenders
 
-Replace this paragraph with your own summary of what your version does.
+My version, **VibeMatch 1.0**, is a content-based music recommender that runs in the terminal. It loads 20 fictional songs from a CSV file, scores each one against a user's taste profile (genre, mood, energy, acoustic preference, popularity, decade, mood tags, explicit content, and language), and prints the top 5 matches in a table with the reasons behind each score. It supports three ranking modes (Genre-First, Mood-First, Energy-Focused) and an optional diversity penalty that stops one artist or genre from taking over the results.
 
 ---
 
@@ -192,15 +192,14 @@ Overall, the change made the results **more accurate for some users and just dif
 
 ## Limitations and Risks
 
-Summarize some limitations of your recommender.
+- **Tiny catalog:** only 20 songs, and most genres have just one song, so many users run out of good matches after the first result.
+- **Genre dominates:** a genre match (+2.0) outweighs most other rules, so "Gym Hero" (intense) ranks #2 for a *happy* pop fan just because it is pop.
+- **Energy fills the gaps:** once genre matches run out, the rest of the list is mostly decided by energy, so very different users get the same loud songs.
+- **Exact text matching:** "indie pop" gets no credit for a "pop" fan, and "melancholy" gets no credit for "sad".
+- **Subjective labels treated as facts:** values like danceability and labels like "sad" are guesses, but the system trusts them completely.
+- **No learning from behavior:** it doesn't use likes, skips, or what similar users enjoy, so it can't discover new tastes.
 
-Examples:
-
-- It only works on a tiny catalog
-- It does not understand lyrics or language
-- It might over favor one genre or mood
-
-You will go deeper on this in your model card.
+See the [Model Card](model_card.md) for more detail on bias and evaluation.
 
 ---
 

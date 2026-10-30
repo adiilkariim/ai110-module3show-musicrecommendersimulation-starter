@@ -290,9 +290,10 @@ In plain language: Gym Hero is a loud, intense workout song, but it is labeled "
 
 ## 9. Personal Reflection  
 
-<!-- Write this section yourself, in your own words. Prompts from the assignment:
-- What was your biggest learning moment during this project?
-- How did using AI tools help you, and when did you need to double-check them?
+**Biggest learning moment / How I used AI:**
+The biggest thing I learned is that AI does not know everything. I used to think it did. When I let it work on its own, it would sometimes add things I didn't ask for or change things I didn't expect. Because of that, I learned to go step by step, review every change it made, and always verify the results myself instead of trusting them automatically.
+
+<!-- Still to answer in your own words:
 - What surprised you about how simple algorithms can still "feel" like recommendations?
 - What would you try next if you extended this project?
 -->
