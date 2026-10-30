@@ -53,15 +53,48 @@ Add five new song attributes to the dataset and make the scoring logic use them,
 
 **Which design pattern did you use?**
 
-<!-- e.g., Strategy, Factory, Observer, etc. -->
+The **Strategy pattern**. Each ranking mode (Genre-First, Mood-First, Energy-Focused) is a separate, interchangeable strategy class, and the recommender uses whichever strategy it is given.
 
 **How did AI help you brainstorm or implement it?**
 
-<!-- Describe the conversation or suggestions that led to your decision -->
+Prompt:
+
+> Look at recommender.py and suggest a design pattern that lets me switch between different ranking modes like Genre-First, Mood-First, and Energy-Focused while keeping the code modular.
+
+The AI suggested three options:
+
+1. **Strategy pattern with classes:** each mode is a class with the same method, and the recommender accepts any of them. Clearly a design pattern, and adding a mode only means adding one class.
+2. **Function-based strategy:** each mode is its own scoring function stored in a dictionary. Simple, but every function would repeat all nine scoring rules, so fixing a rule means fixing it in every mode.
+3. **Configuration dictionary:** each mode is just a dictionary of weights. Least code, but it's closer to plain settings than a design pattern.
+
+I chose **Option 1** because it keeps every scoring rule in one place, makes adding new modes easy, and is clearly a design pattern. The AI then implemented it, keeping Genre-First as the default so the existing tests and output did not change.
 
 **How does the pattern appear in your final code?**
 
-<!-- Point to the relevant class or method -->
+- `src/recommender.py`:
+  - `RankingStrategy` is the base strategy. Its `score_core()` method scores the genre, mood, and energy rules using the strategy's weights.
+  - `GenreFirst`, `MoodFirst`, and `EnergyFocused` are the concrete strategies. They only change the weights:
+
+    | Strategy | Genre | Mood | Energy |
+    |---|---|---|---|
+    | Genre-First (default) | +2.0 | +1.0 | up to +1.0 |
+    | Mood-First | +1.0 | +2.0 | up to +1.0 |
+    | Energy-Focused | +0.5 | +0.5 | up to +3.0 |
+
+  - `STRATEGIES` maps mode names to strategy objects.
+  - `score_song()` and `recommend_songs()` take an optional `strategy` argument. The other rules (acoustic, popularity, decade, mood tags, explicit, language) are shared by every strategy.
+  - `Recommender` also accepts an optional `strategy`.
+- `src/main.py`: the user switches modes by changing one line at the top: `MODE = "genre_first"` (or `"mood_first"` / `"energy_focused"`).
+
+**Example of how the modes change results** (High-Energy Pop profile, top 5):
+
+```
+genre_first:    Sunrise City, Gym Hero, Rooftop Lights, Island Breeze Sunday, Storm Runner
+mood_first:     Sunrise City, Rooftop Lights, Gym Hero, Island Breeze Sunday, Storm Runner
+energy_focused: Sunrise City, Rooftop Lights, Storm Runner, Gym Hero, Island Breeze Sunday
+```
+
+In Mood-First, "Rooftop Lights" (happy) moves above "Gym Hero" (intense), because the happy mood is now worth more than the pop genre.
 
 ---
 

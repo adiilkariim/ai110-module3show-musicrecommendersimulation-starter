@@ -4,8 +4,10 @@ Command line runner for the Music Recommender Simulation.
 Runs the recommender for several user profiles and prints the top results.
 """
 
-from src.recommender import load_songs, recommend_songs
+from src.recommender import load_songs, recommend_songs, STRATEGIES
 
+# Ranking mode: "genre_first", "mood_first", or "energy_focused"
+MODE = "genre_first"
 
 PROFILES = {
     "High-Energy Pop": {
@@ -34,10 +36,12 @@ PROFILES = {
 
 def main() -> None:
     songs = load_songs("data/songs.csv")
+    strategy = STRATEGIES[MODE]
     print(f"Loaded songs: {len(songs)}")
+    print(f"Ranking mode: {strategy.name}")
 
     for name, user_prefs in PROFILES.items():
-        recommendations = recommend_songs(user_prefs, songs, k=5)
+        recommendations = recommend_songs(user_prefs, songs, k=5, strategy=strategy)
 
         print(f"\n=== {name} ===")
         print(f"Profile: {user_prefs}\n")
